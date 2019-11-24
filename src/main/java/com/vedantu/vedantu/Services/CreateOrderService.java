@@ -43,6 +43,7 @@ public class CreateOrderService {
         inventory.setCreatedAt(inventoryDetail.getCreatedAt());
         if(inventoryDetail.getAvailableUnits()-count > 1) {
             inventory.setCurrentUseLock(AppConstants.RELEASE);
+
         }
         else{
             inventory.setCurrentUseLock(AppConstants.LOCK);

@@ -2,35 +2,35 @@ package com.vedantu.vedantu.DAO;
 
 public class InventoryConfig {
 
-    private boolean  isSellable = true;
+    private boolean  sellable;
     private boolean canReturn;
     private boolean canReplace;
     private boolean repairInsurance;
     private boolean internationalAllowed;
-    private boolean isFragile;
-    private boolean isAntique;
-    private boolean isPremium;
+    private boolean fragile;
+    private boolean antique;
+    private boolean premium;
 
     public InventoryConfig() {
     }
 
-    public InventoryConfig(boolean isSellable, boolean canReturn, boolean canReplace, boolean repairInsurance, boolean internationalAllowed, boolean isFragile, boolean isAntique, boolean isPremium) {
-       this.isSellable=isSellable;
+    public InventoryConfig(boolean sellable, boolean canReturn, boolean canReplace, boolean repairInsurance, boolean internationalAllowed, boolean fragile, boolean antique, boolean premium) {
+       this.sellable = sellable;
         this.canReturn = canReturn;
         this.canReplace = canReplace;
         this.repairInsurance = repairInsurance;
         this.internationalAllowed = internationalAllowed;
-        this.isFragile = isFragile;
-        this.isAntique = isAntique;
-        this.isPremium = isPremium;
+       this.fragile =fragile;
+       this.antique= antique;
+       this. premium = premium;
     }
 
     public boolean isSellable() {
-        return isSellable;
+        return sellable;
     }
 
     public void setSellable(boolean sellable) {
-        isSellable = sellable;
+        this.sellable = sellable;
     }
 
     public boolean isCanReturn() {
@@ -66,26 +66,26 @@ public class InventoryConfig {
     }
 
     public boolean isFragile() {
-        return isFragile;
+        return fragile;
     }
 
     public void setFragile(boolean fragile) {
-        isFragile = fragile;
+        this.fragile = fragile;
     }
 
     public boolean isAntique() {
-        return isAntique;
+        return antique;
     }
 
     public void setAntique(boolean antique) {
-        isAntique = antique;
+        this.antique = antique;
     }
 
     public boolean isPremium() {
-        return isPremium;
+        return premium;
     }
 
     public void setPremium(boolean premium) {
-        isPremium = premium;
+        this.premium = premium;
     }
 }
