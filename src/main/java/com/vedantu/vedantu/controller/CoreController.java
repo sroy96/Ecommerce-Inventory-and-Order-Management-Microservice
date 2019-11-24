@@ -1,16 +1,19 @@
 package com.vedantu.vedantu.controller;
 
+import com.vedantu.vedantu.DAO.Cart;
+import com.vedantu.vedantu.Services.CreateOrderService;
 import com.vedantu.vedantu.constants.ApiMapper;
 import com.vedantu.vedantu.constants.AppConstants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class CoreController {
+
+    @Autowired
+    CreateOrderService createOrderService;
 
     @GetMapping(ApiMapper.GET_HEALTH)
     public ResponseEntity getHealth() {
@@ -18,8 +21,8 @@ public class CoreController {
     }
 
     @PostMapping(ApiMapper.POST_ORDER)
-    public ResponseEntity createOrder(@RequestHeader(AppConstants.ACCESS_TOKEN) String accessToken) {
-
+    public ResponseEntity createOrder(@RequestHeader(AppConstants.ACCESS_TOKEN) String accessToken, @RequestBody Cart cart) {
+        createOrderService.createOrder(accessToken,cart);
         return new ResponseEntity(HttpStatus.OK);
     }
 

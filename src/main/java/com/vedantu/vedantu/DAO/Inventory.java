@@ -20,14 +20,14 @@ public class Inventory {
     private long createdAt;
     private long updatedAt;
     private InventoryCategory inventoryCategory;
-    private int currentUseLock;
+    private String currentUseLock;
     private  CountryCode countryCode;
     private int availableUnits;
 
     public Inventory() {
     }
 
-    public Inventory(String itemName, CountryCode countryCode,String manufacturer, Address manufactureLocation, float basePrice, float maxDiscountAllowed, float minCommission, InventoryConfig inventoryConfig, long createdAt, long updatedAt, InventoryCategory inventoryCategory, int currentUseLock, int availableUnits) {
+    public Inventory(String itemName, CountryCode countryCode,String manufacturer, Address manufactureLocation, float basePrice, float maxDiscountAllowed, float minCommission, InventoryConfig inventoryConfig, long createdAt, long updatedAt, InventoryCategory inventoryCategory, String currentUseLock, int availableUnits) {
         this.itemName = itemName;
         this.manufacturer = manufacturer;
         this.manufactureLocation = manufactureLocation;
@@ -139,11 +139,11 @@ public class Inventory {
         this.inventoryCategory = inventoryCategory;
     }
 
-    public int getCurrentUseLock() {
+    public String getCurrentUseLock() {
         return currentUseLock;
     }
 
-    public void setCurrentUseLock(int currentUseLock) {
+    public void setCurrentUseLock(String currentUseLock) {
         this.currentUseLock = currentUseLock;
     }
 
