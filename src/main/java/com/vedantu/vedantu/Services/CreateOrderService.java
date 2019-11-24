@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.vedantu.vedantu.DAO.InventoryCategory.LARGE;
@@ -34,26 +35,27 @@ public class CreateOrderService {
     }
 
 
-    public void updatedInventory(Inventory inventory){
-        inventory.setAvailableUnits(inventory.getAvailableUnits()-1);
-        inventory.setBasePrice(inventory.getBasePrice());
-        inventory.setCountryCode(inventory.getCountryCode());
-        inventory.setCreatedAt(inventory.getCreatedAt());
-        if(inventory.getAvailableUnits()-1 >=1) {
+    public void updatedInventory(Inventory inventoryDetail){
+        Inventory inventory = new Inventory();
+        inventory.setAvailableUnits(inventoryDetail.getAvailableUnits()-1);
+        inventory.setBasePrice(inventoryDetail.getBasePrice());
+        inventory.setCountryCode(inventoryDetail.getCountryCode());
+        inventory.setCreatedAt(inventoryDetail.getCreatedAt());
+        if(inventoryDetail.getAvailableUnits()-1 >=1) {
             inventory.setCurrentUseLock(AppConstants.RELEASE);
         }
         else{
             inventory.setCurrentUseLock(AppConstants.LOCK);
         }
-        inventory.setMaxDiscountAllowed(inventory.getMaxDiscountAllowed());
-        inventory.setInventoryConfig(inventory.getInventoryConfig());
-        inventory.setItemId(inventory.getItemId());
-        inventory.setItemName(inventory.getItemName());
-        inventory.setInventoryCategory(inventory.getInventoryCategory());
-        inventory.setManufactureLocation(inventory.getManufactureLocation());
-        inventory.setUpdatedAt(inventory.getUpdatedAt());
-        inventory.setMinCommission(inventory.getMinCommission());
-        inventory.setManufacturer(inventory.getManufacturer());
+        inventory.setMaxDiscountAllowed(inventoryDetail.getMaxDiscountAllowed());
+        inventory.setInventoryConfig(inventoryDetail.getInventoryConfig());
+        inventory.setItemId(inventoryDetail.getItemId());
+        inventory.setItemName(inventoryDetail.getItemName());
+        inventory.setInventoryCategory(inventoryDetail.getInventoryCategory());
+        inventory.setManufactureLocation(inventoryDetail.getManufactureLocation());
+        inventory.setUpdatedAt(inventoryDetail.getUpdatedAt());
+        inventory.setMinCommission(inventoryDetail.getMinCommission());
+        inventory.setManufacturer(inventoryDetail.getManufacturer());
         inventoryRepository.save(inventory);
     }
 
@@ -149,5 +151,7 @@ public class CreateOrderService {
     }
 
 
-
+    public List<Orders> showOrders() {
+        return orderRepository.findAll();
+    }
 }
