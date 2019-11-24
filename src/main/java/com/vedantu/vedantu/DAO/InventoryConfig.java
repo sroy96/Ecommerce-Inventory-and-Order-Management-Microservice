@@ -2,7 +2,7 @@ package com.vedantu.vedantu.DAO;
 
 public class InventoryConfig {
 
-    private boolean isSellable;
+    private boolean  isSellable = true;
     private boolean canReturn;
     private boolean canReplace;
     private boolean repairInsurance;
@@ -15,7 +15,7 @@ public class InventoryConfig {
     }
 
     public InventoryConfig(boolean isSellable, boolean canReturn, boolean canReplace, boolean repairInsurance, boolean internationalAllowed, boolean isFragile, boolean isAntique, boolean isPremium) {
-        this.isSellable = isSellable;
+       this.isSellable=isSellable;
         this.canReturn = canReturn;
         this.canReplace = canReplace;
         this.repairInsurance = repairInsurance;

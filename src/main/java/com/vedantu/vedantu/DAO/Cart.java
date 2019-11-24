@@ -31,5 +31,11 @@ public class Cart {
     }
 
 
+    @Override
+    public String toString() {
+        return "Cart{" +
+                "itemList=" + itemList +
+                '}';
+    }
 }
 

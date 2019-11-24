@@ -28,7 +28,7 @@ public class CoreController {
 
     @PostMapping(ApiMapper.POST_ORDER)
     public ResponseEntity createOrder(@RequestHeader(AppConstants.ACCESS_TOKEN) String accessToken, @RequestBody Cart cart) {
-        createOrderService.createOrder(accessToken,cart);
+        createOrderService.createOrder(cart);
         return new ResponseEntity(HttpStatus.OK);
     }
         @PostMapping(ApiMapper.ACCOUNT_POST)

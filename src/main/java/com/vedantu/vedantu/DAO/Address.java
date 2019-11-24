@@ -3,7 +3,7 @@ package com.vedantu.vedantu.DAO;
 public class Address {
 
     private String lineNumber1;
-    private String LineNumber2;
+    private String lineNumber2;
     private String city;
     private String state;
     private String country;
@@ -11,7 +11,7 @@ public class Address {
 
     public Address(String lineNumber1, String lineNumber2, String city, String state, String country, String postalCode) {
         this.lineNumber1 = lineNumber1;
-        LineNumber2 = lineNumber2;
+        this.lineNumber2 = lineNumber2;
         this.city = city;
         this.state = state;
         this.country = country;
@@ -27,11 +27,11 @@ public class Address {
     }
 
     public String getLineNumber2() {
-        return LineNumber2;
+        return lineNumber2;
     }
 
     public void setLineNumber2(String lineNumber2) {
-        LineNumber2 = lineNumber2;
+        this.lineNumber2 = lineNumber2;
     }
 
     public String getCity() {

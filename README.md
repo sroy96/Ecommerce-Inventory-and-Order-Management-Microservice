@@ -3,7 +3,7 @@
 	"itemId":"A",
 	"itemName":"Coffee",
 	"manufacturer":"Leafy Inc",
-	"manufacturerLocation":{
+	"manufactureLocation":{
 		"lineNumber1":"Road 1",
 		"lineNumber2":"B/h pond",
 		"city":"Hyderabad",
@@ -35,4 +35,14 @@
 	
 }
 
+````
+
+### JSON for Ordering Item
+
+````
+ {
+ 		"itemList" : {
+	"ABCDSER":2
+ 		}
+ 	}
 ````

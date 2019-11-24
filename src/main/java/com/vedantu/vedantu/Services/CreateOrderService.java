@@ -35,13 +35,13 @@ public class CreateOrderService {
     }
 
 
-    public void updatedInventory(Inventory inventoryDetail){
+    public void updatedInventory(Inventory inventoryDetail, int count){
         Inventory inventory = new Inventory();
-        inventory.setAvailableUnits(inventoryDetail.getAvailableUnits()-1);
+        inventory.setAvailableUnits(inventoryDetail.getAvailableUnits()-count);
         inventory.setBasePrice(inventoryDetail.getBasePrice());
         inventory.setCountryCode(inventoryDetail.getCountryCode());
         inventory.setCreatedAt(inventoryDetail.getCreatedAt());
-        if(inventoryDetail.getAvailableUnits()-1 >=1) {
+        if(inventoryDetail.getAvailableUnits()-count > 1) {
             inventory.setCurrentUseLock(AppConstants.RELEASE);
         }
         else{
@@ -71,9 +71,7 @@ public class CreateOrderService {
         if(inventory.getInventoryConfig().isPremium()){
             sum=sum+AppConstants.PREMIUM_CHARGE;
         }
-        if(inventory.getInventoryCategory().equals(LARGE)){
-            sum=sum+AppConstants.LARGE_BOX_CHARGE;
-        }
+
         return sum;
     }
 
@@ -82,7 +80,7 @@ public class CreateOrderService {
      *
      * @param cart
      */
-    public void createOrder(String token,Cart cart){
+    public void createOrder(Cart cart){
                 Orders orders = new Orders();
                 DispatchItenary dispatchItenary = new DispatchItenary();
                 Map<String, OrderConfig>orderDetails= new HashMap<>();
@@ -106,12 +104,14 @@ public class CreateOrderService {
                       orderConfig.setRetailerAddress(inventory.getManufactureLocation());
                       orderConfig.setItemPricePerPiece(inventory.getBasePrice());
 
-                      orderDetails.put(orderId, orderConfig);
-                      orderTotal = orderTotal + ((int) mapElement.getValue() * inventory.getBasePrice());
+
+                      orderTotal = orderTotal + ((int) mapElement.getValue() * inventory.getBasePrice()); //error
                       discount = discount + inventory.getMinCommission();
                       commission = commission + inventory.getMaxDiscountAllowed();
-                      extra=extra+ extraCharges((String)mapElement.getKey());
-                      updatedInventory(inventory);
+                      extra=extra+ extraCharges((String)mapElement.getKey())* (int) mapElement.getValue();
+                      orderDetails.put(orderId, orderConfig);
+                      updatedInventory(inventory, (int) mapElement.getValue() );
+
                   }
                   else{
                       throw  new AppException(AppConstants.ITEM_NOT_AVAILABLE);
@@ -119,14 +119,15 @@ public class CreateOrderService {
               }
               String billNo= createBillNo();
               orders.setTrackId(billNo);
-              orders.setOrderTotal(orderTotal-discount+commission+AppConstants.DELIVERY_CHARGE);
+              System.out.println(orderTotal-discount+commission+AppConstants.DELIVERY_CHARGE+ extra);
+              orders.setOrderTotal(orderTotal-discount+commission+AppConstants.DELIVERY_CHARGE+ extra);
               orders.setDeliveryCharge(AppConstants.DELIVERY_CHARGE);
               orders.setTotalDiscount(discount);
-         Map<String ,Map<String, OrderConfig>>dispatchMap = new HashMap<String ,Map<String, OrderConfig>>();
-            dispatchMap.put(billNo,orderDetails);
-            dispatchItenary.setDispatchMap(dispatchMap);
-            orders.setDispatchItenary(dispatchItenary);
-            orders.setAccountId(AppConstants.ACCESS_TOKEN);
+              Map<String ,Map<String, OrderConfig>>dispatchMap = new HashMap<String ,Map<String, OrderConfig>>();
+              dispatchMap.put(billNo,orderDetails);
+              dispatchItenary.setDispatchMap(dispatchMap);
+              orders.setDispatchItenary(dispatchItenary);
+              orders.setAccountId(AppConstants.ACCESS_TOKEN);
 
             orderRepository.save(orders);
 
