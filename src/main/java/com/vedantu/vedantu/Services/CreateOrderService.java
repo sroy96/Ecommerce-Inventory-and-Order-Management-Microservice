@@ -73,64 +73,148 @@ public class CreateOrderService {
             sum=sum+AppConstants.PREMIUM_CHARGE;
         }
 
+
         return sum;
     }
 
+    public boolean validateUserId(String accessId){
+        boolean userAuth=false;
+        Accounts accounts= accountRepository.findByUserProfileId(accessId);
+        if(accounts.getAccountId()!= null){
+            userAuth=true;
+        }
+        else{
+            throw  new AppException(AppConstants.USER_INVALID);
+        }
+        return userAuth;
+    }
+
+public CountryCode userCountryCode(String userToken){
+    Accounts accounts= accountRepository.findByUserProfileId(userToken);
+    return accounts.getCountryCode();
+
+}
+
+
+
+    public float couponCodes(String accountToken,Cart cart) {
+        float discount;
+        if(cart.getCouponApplied()!=null) {
+
+            String coupon = cart.getCouponApplied();
+            Accounts accounts =  accountRepository.findByUserProfileId(accountToken);
+            List<String> allowedCoupons = accounts.getAccountConfig().getAllowedCoupons();
+            boolean isCouponAllowed = false;
+            for (String allowedCoupon : allowedCoupons) {
+                if (coupon.equals(allowedCoupon)) {
+                    isCouponAllowed = true;
+                    break;
+                }
+
+            }
+
+
+            switch (coupon) {
+                case "VEDANTU30":
+                    discount = AppConstants.VEDANTU30_COUPON;
+                    break;
+                case "LEARNED":
+                    discount = AppConstants.LEARNED_COUPON;
+                    break;
+                case "TEACHINDIA":
+                    discount = AppConstants.TEACHINDIA_COUPON;
+                case "GROWINDIA":
+                    discount = AppConstants.GROWINDIA_COUPON;
+                default:
+                    discount = (float) 0.0;
+                    break;
+            }
+            if(accounts.getAccountConfig().isCouponsAllowed()) {
+
+                if (isCouponAllowed) {
+                    return discount;
+                } else {
+                    return 0;
+                }
+            }else{
+                return 0;
+            }
+
+        }
+        else{
+            return 0;
+        }
+    }
 
     /**
      *
-     * @param cart
+     * @param accountToken Validate the User Session
+     * @param cart Take input of the Item and Quantity and other details to validate and calculate the price
      */
-    public void createOrder(Cart cart){
-                Orders orders = new Orders();
-                DispatchItenary dispatchItenary = new DispatchItenary();
-                Map<String, OrderConfig>orderDetails= new HashMap<>();
-              Map<String, Integer>map =cart.getItemList();
-              float orderTotal= 0;
-              float discount=0;
-              float commission=0;
-              float extra=0;
-              for(Map.Entry mapElement : map.entrySet()){
-                  Inventory inventory = inventoryRepository.findByItemId((String)mapElement.getKey());
-                  if(inventory!=null &&
-                          inventory.getInventoryConfig().isSellable() &&
-                          inventory.getCurrentUseLock().equals(AppConstants.RELEASE)) {
+    public void createOrder(String accountToken,Cart cart){
 
-                      String orderId = "#" + inventory.getItemId() + inventory.getItemName().substring(0, inventory.getItemName().length() / 2);
-                      OrderConfig orderConfig = new OrderConfig();
-                      orderConfig.setCountryCode(inventory.getCountryCode());
-                      orderConfig.setInventoryCategory(inventory.getInventoryCategory());
-                      orderConfig.setInventoryConfig(inventory.getInventoryConfig());
-                      orderConfig.setItemName(inventory.getItemName());
-                      orderConfig.setRetailerAddress(inventory.getManufactureLocation());
-                      orderConfig.setItemPricePerPiece(inventory.getBasePrice());
+        if(validateUserId(accountToken)) {
 
+            Orders orders = new Orders();
+            DispatchItenary dispatchItenary = new DispatchItenary();
+            Map<String, OrderConfig> orderDetails = new HashMap<>();
+            Map<String, Integer> map = cart.getItemList();
+            float orderTotal = 0;
+            float discount = 0;
+            float commission = 0;
+            float extra = 0;
+            float internationalCharge=0;
+            for (Map.Entry mapElement : map.entrySet()) {
+                Inventory inventory = inventoryRepository.findByItemId((String) mapElement.getKey());
+                if (inventory != null &&
+                        inventory.getInventoryConfig().isSellable() &&
+                        inventory.getCurrentUseLock().equals(AppConstants.RELEASE)) {
 
-                      orderTotal = orderTotal + ((int) mapElement.getValue() * inventory.getBasePrice()); //error
-                      discount = discount + inventory.getMinCommission();
-                      commission = commission + inventory.getMaxDiscountAllowed();
-                      extra=extra+ extraCharges((String)mapElement.getKey())* (int) mapElement.getValue();
-                      orderDetails.put(orderId, orderConfig);
-                      updatedInventory(inventory, (int) mapElement.getValue() );
+                    String orderId = "#" + inventory.getItemId() + inventory.getItemName().substring(0, inventory.getItemName().length() / 2);
+                    OrderConfig orderConfig = new OrderConfig();
+                    orderConfig.setCountryCode(inventory.getCountryCode());
+                    orderConfig.setInventoryCategory(inventory.getInventoryCategory());
+                    orderConfig.setInventoryConfig(inventory.getInventoryConfig());
+                    orderConfig.setItemName(inventory.getItemName());
+                    orderConfig.setRetailerAddress(inventory.getManufactureLocation());
+                    orderConfig.setItemPricePerPiece(inventory.getBasePrice());
+                    if(userCountryCode(accountToken).equals(inventory.getCountryCode())){
+                        internationalCharge=internationalCharge+0;
+                    }
+                    else if(!userCountryCode(accountToken).equals(inventory.getCountryCode()) && inventory.getInventoryConfig().isInternationalAllowed()){
+                        internationalCharge=internationalCharge+AppConstants.INTERNATIONAL_CHARGE;
+                    }
+                    orderTotal = orderTotal + ((int) mapElement.getValue() * inventory.getBasePrice());
+                    discount = discount + inventory.getMinCommission();
+                    commission = commission + inventory.getMaxDiscountAllowed();
+                    extra = extra + extraCharges((String) mapElement.getKey()) * (int) mapElement.getValue();
+                    orderDetails.put(orderId, orderConfig);
+                    updatedInventory(inventory, (int) mapElement.getValue());
 
-                  }
-                  else{
-                      throw  new AppException(AppConstants.ITEM_NOT_AVAILABLE);
-                  }
-              }
-              String billNo= createBillNo();
-              orders.setTrackId(billNo);
-              System.out.println(orderTotal-discount+commission+AppConstants.DELIVERY_CHARGE+ extra);
-              orders.setOrderTotal(orderTotal-discount+commission+AppConstants.DELIVERY_CHARGE+ extra);
-              orders.setDeliveryCharge(AppConstants.DELIVERY_CHARGE);
-              orders.setTotalDiscount(discount);
-              Map<String ,Map<String, OrderConfig>>dispatchMap = new HashMap<String ,Map<String, OrderConfig>>();
-              dispatchMap.put(billNo,orderDetails);
-              dispatchItenary.setDispatchMap(dispatchMap);
-              orders.setDispatchItenary(dispatchItenary);
-              orders.setAccountId(AppConstants.ACCESS_TOKEN);
+                } else {
+                    throw new AppException(AppConstants.ITEM_NOT_AVAILABLE);
+                }
+            }
+
+            float couponCodeDiscount = couponCodes(accountToken, cart);
+
+            String billNo = createBillNo();
+            orders.setTrackId(billNo);
+            orders.setOrderTotal(orderTotal - discount + commission + AppConstants.DELIVERY_CHARGE + extra -couponCodeDiscount + internationalCharge);
+            orders.setDeliveryCharge(AppConstants.DELIVERY_CHARGE);
+            orders.setTotalDiscount(discount);
+            Map<String, Map<String, OrderConfig>> dispatchMap = new HashMap<String, Map<String, OrderConfig>>();
+            dispatchMap.put(billNo, orderDetails);
+            dispatchItenary.setDispatchMap(dispatchMap);
+            orders.setDispatchItenary(dispatchItenary);
+            orders.setAccountId(AppConstants.ACCESS_TOKEN);
+            orders.setAppliedCouponId(cart.getCouponApplied());
 
             orderRepository.save(orders);
+        }
+        else{
+            throw  new AppException(AppConstants.USER_INVALID);
+        }
 
     }
 
@@ -152,8 +236,7 @@ public class CreateOrderService {
 
     }
 
-
-    public List<Orders> showOrders() {
-        return orderRepository.findAll();
+   public void changeInventory(Inventory inventory) {
+        inventoryRepository.save(inventory);
     }
 }

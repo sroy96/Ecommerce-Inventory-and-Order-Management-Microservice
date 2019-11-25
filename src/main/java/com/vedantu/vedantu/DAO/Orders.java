@@ -18,17 +18,27 @@ public class Orders {
     private float deliveryCharge;
     private String accountId;
     private DispatchItenary dispatchItenary;
+    private String appliedCouponId;
 
     public Orders() {
     }
 
-    public Orders(DispatchItenary dispatchItenary, float orderTotal, float totalDiscount, float deliveryCharge, String accountId) {
+    public Orders(DispatchItenary dispatchItenary,String appliedCouponId, float orderTotal, float totalDiscount, float deliveryCharge, String accountId) {
 
         this.orderTotal = orderTotal;
         this.totalDiscount = totalDiscount;
         this.deliveryCharge = deliveryCharge;
         this.accountId = accountId;
         this.dispatchItenary = dispatchItenary;
+        this.appliedCouponId=appliedCouponId;
+    }
+
+    public String getAppliedCouponId() {
+        return appliedCouponId;
+    }
+
+    public void setAppliedCouponId(String appliedCouponId) {
+        this.appliedCouponId = appliedCouponId;
     }
 
     public String getTrackId() {

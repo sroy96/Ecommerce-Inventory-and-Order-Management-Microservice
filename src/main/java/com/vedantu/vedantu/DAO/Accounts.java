@@ -19,7 +19,7 @@ public class Accounts {
 
     private Address address;
 
-    private List<Address> billingAddress;
+
 
     private String taxationNumber;
 
@@ -32,10 +32,10 @@ public class Accounts {
     public Accounts() {
     }
 
-    public Accounts(String userProfileId, Address address, List<Address> billingAddress, String taxationNumber, AccountConfig accountConfig, UserDetails userDetails, CountryCode countryCode) {
+    public Accounts(String userProfileId, Address address,  String taxationNumber, AccountConfig accountConfig, UserDetails userDetails, CountryCode countryCode) {
         this.userProfileId = userProfileId;
         this.address = address;
-        this.billingAddress = billingAddress;
+
         this.taxationNumber = taxationNumber;
         this.accountConfig = accountConfig;
         this.userDetails = userDetails;
@@ -66,13 +66,7 @@ public class Accounts {
         this.address = address;
     }
 
-    public List<Address> getBillingAddress() {
-        return billingAddress;
-    }
 
-    public void setBillingAddress(List<Address> billingAddress) {
-        this.billingAddress = billingAddress;
-    }
 
     public String getTaxationNumber() {
         return taxationNumber;

@@ -4,64 +4,65 @@ import java.util.List;
 
 public class AccountConfig {
 
-    private boolean isCouponsAllowed;
+    private boolean couponsAllowed;
 
-    private boolean isDeliveryAllowed;
+    private boolean deliveryAllowed;
 
-    private boolean isInternationalAllowed;
+    private boolean internationalAllowed;
 
-    private boolean isCashAllowed;
+    private boolean cashAllowed;
 
-    private List<String> excludeCoupons;
+    private List<String>allowedCoupons;
+
 
     public AccountConfig() {
     }
 
-    public AccountConfig(boolean isCouponsAllowed, boolean isDeliveryAllowed, boolean isInternationalAllowed, boolean isCashAllowed, List<String> excludeCoupons) {
-        this.isCouponsAllowed = isCouponsAllowed;
-        this.isDeliveryAllowed = isDeliveryAllowed;
-        this.isInternationalAllowed = isInternationalAllowed;
-        this.isCashAllowed = isCashAllowed;
-        this.excludeCoupons = excludeCoupons;
+    public AccountConfig(boolean couponsAllowed,List<String>allowedCoupons, boolean deliveryAllowed, boolean internationalAllowed, boolean cashAllowed) {
+        this.couponsAllowed = couponsAllowed;
+        this.deliveryAllowed = deliveryAllowed;
+        this.internationalAllowed = internationalAllowed;
+        this.allowedCoupons=allowedCoupons;
+        this.cashAllowed = cashAllowed;
+    }
+
+    public List<String> getAllowedCoupons() {
+        return allowedCoupons;
+    }
+
+    public void setAllowedCoupons(List<String> allowedCoupons) {
+        this.allowedCoupons = allowedCoupons;
     }
 
     public boolean isCouponsAllowed() {
-        return isCouponsAllowed;
+        return couponsAllowed;
     }
 
     public void setCouponsAllowed(boolean couponsAllowed) {
-        isCouponsAllowed = couponsAllowed;
+        this.couponsAllowed = couponsAllowed;
     }
 
     public boolean isDeliveryAllowed() {
-        return isDeliveryAllowed;
+        return deliveryAllowed;
     }
 
     public void setDeliveryAllowed(boolean deliveryAllowed) {
-        isDeliveryAllowed = deliveryAllowed;
+        this.deliveryAllowed = deliveryAllowed;
     }
 
     public boolean isInternationalAllowed() {
-        return isInternationalAllowed;
+        return internationalAllowed;
     }
 
     public void setInternationalAllowed(boolean internationalAllowed) {
-        isInternationalAllowed = internationalAllowed;
+        this.internationalAllowed = internationalAllowed;
     }
 
     public boolean isCashAllowed() {
-        return isCashAllowed;
+        return cashAllowed;
     }
 
     public void setCashAllowed(boolean cashAllowed) {
-        isCashAllowed = cashAllowed;
-    }
-
-    public List<String> getExcludeCoupons() {
-        return excludeCoupons;
-    }
-
-    public void setExcludeCoupons(List<String> excludeCoupons) {
-        this.excludeCoupons = excludeCoupons;
+        this.cashAllowed = cashAllowed;
     }
 }

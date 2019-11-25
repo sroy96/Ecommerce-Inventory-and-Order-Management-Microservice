@@ -28,7 +28,8 @@ public class CoreController {
 
     @PostMapping(ApiMapper.POST_ORDER)
     public ResponseEntity createOrder(@RequestHeader(AppConstants.ACCESS_TOKEN) String accessToken, @RequestBody Cart cart) {
-        createOrderService.createOrder(cart);
+
+        createOrderService.createOrder(accessToken,cart);
         return new ResponseEntity(HttpStatus.OK);
     }
         @PostMapping(ApiMapper.ACCOUNT_POST)
@@ -44,10 +45,12 @@ public class CoreController {
         return  new ResponseEntity(HttpStatus.OK);
     }
 
-    @GetMapping(ApiMapper.SHOW_ORDERS)
-    public List<Orders> showOrders( )
-    {
-        return createOrderService.showOrders();
-    }
+   @PutMapping(ApiMapper.INVENTORY_PUT)
+    public ResponseEntity updateInventory(@RequestBody Inventory inventory){
+        createOrderService.changeInventory(inventory);
+        return new ResponseEntity(HttpStatus.OK);
+   }
 
 }
+
+

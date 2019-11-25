@@ -6,7 +6,7 @@ public class ApiMapper {
     public static final String POST_ORDER = "/create";
     public static final String ACCOUNT_POST = "/add/account";
     public static final String INVENTORY_POST = "/add/store";
-    public static final String SHOW_ORDERS = "/orders";
+    public static final String INVENTORY_PUT = "/update/store";
 
 
 }

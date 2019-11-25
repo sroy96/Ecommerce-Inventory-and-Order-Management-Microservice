@@ -10,16 +10,25 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Cart {
 
-
+    private String couponApplied;
     private Map<String, Integer> itemList= new HashMap<>();
 
 
     public Cart() {
     }
 
-    public Cart(Map<String, Integer> itemList) {
+    public Cart(Map<String, Integer> itemList, String couponApplied) {
         this.itemList = itemList;
+        this.couponApplied= couponApplied;
 
+    }
+
+    public String getCouponApplied() {
+        return couponApplied;
+    }
+
+    public void setCouponApplied(String couponApplied) {
+        this.couponApplied = couponApplied;
     }
 
     public Map<String, Integer> getItemList() {
@@ -34,7 +43,8 @@ public class Cart {
     @Override
     public String toString() {
         return "Cart{" +
-                "itemList=" + itemList +
+                "couponApplied='" + couponApplied + '\'' +
+                ", itemList=" + itemList +
                 '}';
     }
 }
