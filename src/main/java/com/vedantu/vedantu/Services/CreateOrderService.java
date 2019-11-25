@@ -29,12 +29,19 @@ public class CreateOrderService {
     OrderRepository orderRepository;
 
 
-
+    /**
+     * Creating a random Bill Number
+     * @return
+     */
     public String createBillNo(){
         return "#"+"150"+ RandomStringUtils.randomAlphanumeric(7);
     }
 
-
+    /**
+     * Update after POST request of creating order to make changes in Inventor DB [LOCK/RELEASE] and quantity update
+     * @param inventoryDetail
+     * @param count
+     */
     public void updatedInventory(Inventory inventoryDetail, int count){
         Inventory inventory = new Inventory();
         inventory.setAvailableUnits(inventoryDetail.getAvailableUnits()-count);
@@ -60,6 +67,12 @@ public class CreateOrderService {
         inventoryRepository.save(inventory);
     }
 
+    /**
+     * Extra Charge on the Basis of
+     * @param ItemCode
+     * @return
+     */
+
     public float extraCharges(String ItemCode){
         Inventory inventory= inventoryRepository.findByItemId(ItemCode);
         float sum=0;
@@ -77,6 +90,12 @@ public class CreateOrderService {
         return sum;
     }
 
+    /**
+     * Validating the User on the basis of HTTP Header Request
+     * @param accessId
+     * @return
+     */
+
     public boolean validateUserId(String accessId){
         boolean userAuth=false;
         Accounts accounts= accountRepository.findByUserProfileId(accessId);
@@ -89,13 +108,24 @@ public class CreateOrderService {
         return userAuth;
     }
 
+    /**
+     * Fething the Country Code of the User to Levy International Charges.
+     * @param userToken
+     * @return
+     */
+
 public CountryCode userCountryCode(String userToken){
     Accounts accounts= accountRepository.findByUserProfileId(userToken);
     return accounts.getCountryCode();
 
 }
 
-
+    /**
+     * Validating the Coupon Code passed in JSON body with User eligibility and total amount discounted
+     * @param accountToken
+     * @param cart
+     * @return
+     */
 
     public float couponCodes(String accountToken,Cart cart) {
         float discount;
@@ -147,7 +177,7 @@ public CountryCode userCountryCode(String userToken){
     }
 
     /**
-     *
+     *Creating the Order
      * @param accountToken Validate the User Session
      * @param cart Take input of the Item and Quantity and other details to validate and calculate the price
      */
@@ -218,9 +248,18 @@ public CountryCode userCountryCode(String userToken){
 
     }
 
+    /**
+     *
+     * @param accounts
+     */
     public void addAccount(Accounts accounts){
             accountRepository.save(accounts);
     }
+
+    /**
+     *
+     * @param inventory
+     */
 
     public  void addInventory(Inventory inventory){
         inventoryRepository.save(inventory);
@@ -235,6 +274,11 @@ public CountryCode userCountryCode(String userToken){
         }
 
     }
+
+    /**
+     *
+     * @param inventory
+     */
 
    public void changeInventory(Inventory inventory) {
         inventoryRepository.save(inventory);
