@@ -192,7 +192,7 @@ API :  localhost:8080/create
  	}
  ````
 - JSON body For Demonstrating the non- International ordering and also the coupon eligibility of the difference User:
-  
+  (Kindly change the Headers to "access-token" : account1 )
 ````
  {
  		"itemList" : {
